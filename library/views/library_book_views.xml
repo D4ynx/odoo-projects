@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="author"/>
                 <field name="date_published"/>
+                <field name="is_featured"/>
             </tree>
         </field>
     </record>
@@ -19,6 +20,13 @@
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <form string="Book">
+                <header>
+                    <button 
+                        name="action_feature"
+                        string="Mark as Featured"
+                        type="object"
+                        class="btn-primary"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -26,6 +34,8 @@
                         <field name="isbn"/>
                         <field name="date_published"/>
                         <field name="active"/>
+                        <field name="is_featured"/>
+                        <field name="days_since_published"/>
                     </group>
                 </sheet>
             </form>
