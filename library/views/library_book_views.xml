@@ -26,6 +26,24 @@
                         string="Mark as Featured"
                         type="object"
                         class="btn-primary"/>
+                    <button name="action_publish"
+                        string="Mark as Published"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('state', '=', 'published')]}"/>
+                    <button name="action_archive"
+                        string="Mark as Archived"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('state', '=', 'archived')]}"/>
+                    <button name="action_reset_draft"
+                        string="Reset to Draft"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,published,archived"/>
                 </header>
                 <sheet>
                     <group>

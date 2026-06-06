@@ -20,6 +20,12 @@ class LibraryBook(models.Model):
     
     reference = fields.Char(string='Reference ID', copy=False, readonly=True, default='New')
     
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+        ('archived', 'Archived'),
+    ], string='Status', default='draft')
+    
     @api.depends('date_published')
     def _compute_days_since_published(self):    
         for record in self:
@@ -43,6 +49,18 @@ class LibraryBook(models.Model):
         if vals.get('reference', 'New') == 'New':
             vals['reference'] = self.env['ir.sequence'].next_by_code('library.book')
         return super().create(vals)
+    
+    def action_publish(self):
+        for record in self:
+            record.state = 'published'
+    
+    def action_archive(self):
+        for record in self:
+            record.state = 'archived'
+    
+    def action_reset_draft(self):
+        for record in self:
+            record.state = 'draft'
             
             
         
