@@ -6,9 +6,9 @@
     'author': 'D4ynx',
     'depends': ['base'],
     'data': [
+        'data/sequence.xml',
         'security/ir.model.access.csv', 
         'views/library_book_views.xml',
-        'views/sequence.xml',
         'views/library_author_views.xml',
         ],
     'installable': True,
