@@ -8,4 +8,7 @@ class LibraryAuthor(models.Model):
     bio = fields.Text(string='Biography')
     nationality = fields.Char(string='Nationality')
     
+    book_ids = fields.One2many('library.book', 'author_id', string='Books')
+    
+    
     

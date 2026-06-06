@@ -59,4 +59,22 @@
             parent="library_menu_root"
             action="library_book_action"
             sequence="1"/>
+        
+    <!-- Search -->
+    <record id="library_book_view_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search string="Search Books">
+                <field name="name"/>
+                <field name="author_id"/>
+                <filter string="Featured" name="featured" domain="[('is_featured', '=', True)]"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Author" name="group_by_author" context="{'group_by':'author_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
 </odoo>

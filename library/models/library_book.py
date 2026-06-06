@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from datetime import date
 
 class LibraryBook(models.Model):
@@ -29,4 +30,10 @@ class LibraryBook(models.Model):
         for record in self:
             record.is_featured = True
     
+    @api.constrains('date_published')
+    def _check_date_published(self):
+        for record in self:
+            if record.date_published and record.date_published > date.today():
+                raise ValidationError('The publication date cannot be in the future.')
+            
         
