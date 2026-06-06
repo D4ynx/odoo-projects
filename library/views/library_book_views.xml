@@ -29,6 +29,7 @@
                 </header>
                 <sheet>
                     <group>
+                        <field name="reference"/>
                         <field name="name"/>
                         <field name="author_id"/>
                         <field name="isbn"/>

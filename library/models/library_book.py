@@ -18,6 +18,8 @@ class LibraryBook(models.Model):
         compute = '_compute_days_since_published'
         )
     
+    reference = fields.Char(string='Reference ID', copy=False, readonly=True, default='New')
+    
     @api.depends('date_published')
     def _compute_days_since_published(self):    
         for record in self:
@@ -35,5 +37,12 @@ class LibraryBook(models.Model):
         for record in self:
             if record.date_published and record.date_published > date.today():
                 raise ValidationError('The publication date cannot be in the future.')
+            
+    @api.model
+    def create(self, vals):
+        if vals.get('reference', 'New') == 'New':
+            vals['reference'] = self.env['ir.sequence'].next_by_code('library.book')
+        return super().create(vals)
+            
             
         

@@ -19,6 +19,7 @@
             <form string="Author">
                 <sheet>
                     <group>
+                        <field name="reference"/>
                         <field name="name"/>
                         <field name="bio"/>
                         <field name="nationality"/>

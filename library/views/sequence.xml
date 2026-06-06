@@ -1,0 +1,15 @@
+<odoo>
+    <record id="seq_library_book" model="ir.sequence">
+        <field name="name">Library Book Reference</field>
+        <field name="code">library.book</field>
+        <field name="prefix">LIB-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_library_author" model="ir.sequence">
+        <field name="name">Library Author Reference</field>
+        <field name="code">library.author</field>
+        <field name="prefix">AUTH-</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

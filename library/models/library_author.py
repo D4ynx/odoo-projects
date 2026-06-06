@@ -10,5 +10,13 @@ class LibraryAuthor(models.Model):
     
     book_ids = fields.One2many('library.book', 'author_id', string='Books')
     
+    reference = fields.Char(string='Author ID', copy=False, readonly=True, default='New')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('reference', 'New') == 'New':
+            vals['reference'] = self.env['ir.sequence'].next_by_code('library.author')
+        return super().create(vals)
+    
     
     
