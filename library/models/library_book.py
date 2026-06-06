@@ -6,7 +6,7 @@ class LibraryBook(models.Model):
     _description = 'Library Book'
     
     name = fields.Char(string='Title', required=True)
-    author = fields.Char(string='Author', required=True)
+    author_id = fields.Many2one('library.author', string='Author', required=True)
     isbn = fields.Char(string='ISBN')
     date_published = fields.Date(string='Date Published')
     active = fields.Boolean(string='Active', default=True)

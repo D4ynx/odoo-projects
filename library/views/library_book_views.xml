@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Books">
                 <field name="name"/>
-                <field name="author"/>
+                <field name="author_id"/>
                 <field name="date_published"/>
                 <field name="is_featured"/>
             </tree>
@@ -30,7 +30,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="author"/>
+                        <field name="author_id"/>
                         <field name="isbn"/>
                         <field name="date_published"/>
                         <field name="active"/>

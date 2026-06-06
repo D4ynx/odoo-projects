@@ -8,6 +8,7 @@
     'data': [
         'security/ir.model.access.csv', 
         'views/library_book_views.xml',
+        'views/library_author_views.xml',
         ],
     'installable': True,
     'auto_install': False,
