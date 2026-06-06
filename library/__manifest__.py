@@ -5,7 +5,11 @@
     'description': 'A simple module to manage books and authors',
     'author': 'D4ynx',
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'security/ir.model.access.csv', 
+        'views/library_book_views.xml',
+        ],
     'installable': True,
     'auto_install': False,
 }
+
