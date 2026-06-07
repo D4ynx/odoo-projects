@@ -35,7 +35,7 @@ class StudentRecord (models.Model):
     @api.constrains('gpa')
     def _check_gpa(self):
         for record in self:
-            if record.gpa < 0.0 or record.gpa > 4.0:
+            if record.gpa and (record.gpa < 0.0 or record.gpa > 4.0):
                 raise ValidationError('GPA must be between 0.0 and 4.0.')
             
     @api.constrains('enrollment_date')

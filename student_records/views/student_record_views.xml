@@ -20,6 +20,29 @@
         <field name="model">student.record</field>
         <field name="arch" type="xml">
             <form string="Student Record">
+                <header>
+                    <button
+                        name="action_graduated"
+                        string="Mark as Graduated"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('status', '=', 'graduated')]}"/>
+                    <button
+                        name="action_dropped"
+                        string="Mark as Dropped"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('status', '=', 'dropped')]}"/>
+                    <button
+                        name="action_enrolled"
+                        string="Mark as Enrolled"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('status', '=', 'enrolled')]}"/>
+                    <field name="status"
+                        widget="statusbar"
+                        statusbar_visible="enrolled,graduated,dropped"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="reference"/>
@@ -43,6 +66,43 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="student_record_action" model="ir.actions.act_window">
+        <field name="name">Student Records</field>
+        <field name="res_model">student.record</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="student_record_menu"
+        name="Student Records"
+        sequence = "10"/>
+    
+    <menuitem id="student_record_menu_records"
+        name="Records"
+        parent="student_record_menu"
+        action="student_record_action"
+        sequence="1"/>
+
+    <!-- Search -->
+    <record id="student_record_view_search" model="ir.ui.view">
+        <field name="name">student.record.search</field>
+        <field name="model">student.record</field>
+        <field name="arch" type="xml">
+            <search string="Search Student">
+                <field name="name"/>
+                <field name="course"/>
+                <filter string="Enrolled" name="enrolled" domain="[('status', '=', 'enrolled')]"/>
+                <filter string="Graduated" name="graduated" domain="[('status', '=', 'graduated')]"/>
+                <filter string="Dropped" name="dropped" domain="[('status', '=', 'dropped')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Course" name="group_by_course" context="{'group_by':'course'}"/>
+                    <filter string="Year Level" name="group_by_yearlvl" context="{'group_by':'yearlvl'}"/>
+                </group>
+            </search>
         </field>
     </record>
 </odoo>
