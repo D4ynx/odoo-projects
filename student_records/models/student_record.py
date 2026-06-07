@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class StudentRecord (models.Model):
     _name = 'student.record'
@@ -30,3 +31,34 @@ class StudentRecord (models.Model):
     enrollment_date = fields.Date(string='Enrollment Date')
     
     subject_ids = fields.One2many('student.subject', 'student_id', string = 'Subjects')
+    
+    @api.constrains('gpa')
+    def _check_gpa(self):
+        for record in self:
+            if record.gpa < 0.0 or record.gpa > 4.0:
+                raise ValidationError('GPA must be between 0.0 and 4.0.')
+            
+    @api.constrains('enrollment_date')
+    def _check_enrollment_date(self):
+        for record in self:
+            if record.enrollment_date and record.enrollment_date > fields.Date.today():
+                raise ValidationError('Enrollment date cannot be in the future.')
+    @api.model
+    def create(self, vals):
+        if vals.get('reference', 'New') == 'New':
+            vals['reference'] = self.env['ir.sequence'].next_by_code('student.record')
+        return super().create(vals)
+    
+    def action_graduated(self):
+        for record in self:
+            record.status = 'graduated'
+    
+    def action_dropped(self):
+        for record in self:
+            record.status = 'dropped'
+    
+    def action_enrolled(self):
+        for record in self:
+            record.status = 'enrolled'
+    
+     
