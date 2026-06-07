@@ -9,6 +9,7 @@
         'data/sequence.xml',
         'security/ir.model.access.csv',
         'views/student_record_views.xml',
+        'views/student_subject_views.xml',
     ],
     'installable': True,
     'auto_install': False,
