@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <!-- List View -->
+    <record id="student_subject_view_tree" model="ir.ui.view">
+        <field name="name">student.subject.tree</field>
+        <field name="model">student.subject</field>
+        <field name="arch" type="xml">
+            <tree string="Subjects">
+                <field name="subject_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="student_subject_view_form" model="ir.ui.view">
+        <field name="name">student.subject.form</field>
+        <field name="model">student.subject</field>
+        <field name="arch" type="xml">
+            <form string="Subject">
+                <sheet>
+                    <group>
+                        <field name="subject_name"/>
+                        <field name="grade"/>
+                        <field name="units"/>
+                        <field name="student_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="student_subject_action" model="ir.actions.act_window">
+        <field name="name">Subjects</field>
+        <field name="res_model">student.subject</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id = "student_menu_subject"
+        name = "Subjects"
+        parent= "student_record_menu"
+        action="student_subject_action"
+        sequence="2"/>
+
+</odoo>
