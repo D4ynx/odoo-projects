@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Student Record Views -->
+    <record id ="student_record_view_tree" model="ir.ui.view">
+        <field name="name">student.record.tree</field>
+        <field name="model">student.record</field>
+        <field name="arch" type="xml">
+            <tree string="Student Records">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="student_id"/>
+            </tree>
+</odoo>
