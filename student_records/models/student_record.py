@@ -5,7 +5,7 @@ class StudentRecord (models.Model):
     _name = 'student.record'
     _description = 'Student Record'
     
-    reference = fields.Char(string='Student ID', copy=False, required=True, default = 'New')
+    reference = fields.Char(string='Student ID', copy=False, readonly=True, default ='New')
     name = fields.Char(string='Name', required=True)
     email = fields.Char(string='Email', required=True)
     course = fields.Selection([
