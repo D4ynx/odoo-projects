@@ -9,7 +9,7 @@
                 <field name="reference"/>
                 <field name="name"/>
                 <field name="course"/>
-                <field name="yearlvl"/>
+                <field name="student_yearlvl"/>
             </tree>
         </field>
     </record>
@@ -62,15 +62,42 @@
                         <field name="reference"/>
                         <field name="name"/>
                         <field name = "course"/>
-                        <field name = "yearlvl"/>
+                        <field name = "student_yearlvl"/>
                         <field name = "email"/>
                         <field name = "gpa"/>
                         <field name = "enrollment_date"/>
                         <field name="active" invisible="1"/>
                     </group>
                     <notebook> 
-                        <page string="Grades">
-                            <field name="enrollment_ids">
+                        <page string="First Year">
+                            <field name="first_year_ids" context="{'default_enrollment_yearlvl' :  'first_year'}">
+                                <tree>
+                                    <field name="subject_id"/>
+                                    <field name="grade"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Second Year" attrs = "{'invisible': [('student_yearlvl', 'not in', ['second_year', 'third_year','fourth_year'])]}">
+                            <field name="second_year_ids" context="{'default_enrollment_yearlvl' : 'second_year'}">
+                                <tree>
+                                    <field name="subject_id"/>
+                                    <field name="grade"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Third Year" attrs = "{'invisible' : [('student_yearlvl', 'not in', ['third_year','fourth_year'])]}">
+                            <field name="third_year_ids" context="{'default_enrollment_yearlvl' : 'third_year'}">
+                                <tree>
+                                    <field name="subject_id"/>
+                                    <field name="grade"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Fourth Year" attrs = "{'invisible' : [('student_yearlvl', 'not in', ['fourth_year'])]}">
+                            <field name="fourth_year_ids" context="{'default_enrollment_yearlvl' : 'fourth_year'}">
                                 <tree>
                                     <field name="subject_id"/>
                                     <field name="grade"/>
@@ -110,14 +137,14 @@
             <search string="Search Student">
                 <field name="name"/>
                 <field name="course"/>
-                <field name="yearlvl"/>
+                <field name="student_yearlvl"/>
                 <filter string="Enrolled" name="enrolled" domain="[('status', '=', 'enrolled')]"/>
                 <filter string="Graduated" name="graduated" domain="[('status', '=', 'graduated')]"/>
                 <filter string="Dropped" name="dropped" domain="[('status', '=', 'dropped')]"/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Course" name="group_by_course" context="{'group_by':'course'}"/>
-                    <filter string="Year Level" name="group_by_yearlvl" context="{'group_by':'yearlvl'}"/>
+                    <filter string="Year Level" name="group_by_yearlvl" context="{'group_by':'student_yearlvl'}"/>
                 </group>
             </search>
         </field>

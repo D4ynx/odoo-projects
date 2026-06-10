@@ -27,17 +27,18 @@ class StudentRecord (models.Model):
         ('business_administration', 'Business Administration'),    
     ], string = 'Course')
     
-    yearlvl = fields.Selection([
+    student_yearlvl = fields.Selection([
         ('first_year', 'First Year'),
         ('second_year', 'Second Year'),
         ('third_year', 'Third Year'),
         ('fourth_year', 'Fourth Year'),
     ], string = 'Year Level')
-    
+    #gpa calculation
     gpa = fields.Float(string='GPA', compute="_compute_gpa", store=True, readonly=True)
     total_units = fields.Integer(string='Total Units', compute='_compute_gpa', store=True, readonly=True)
     units_passed = fields.Integer(string='Units Passed', compute='_compute_gpa', store=True, readonly=True)
     subject_count = fields.Integer(string='Subject Count', compute='_compute_gpa', store=True)
+    
     
     status = fields.Selection([
         ('enrolled', 'Enrolled'),
@@ -48,7 +49,13 @@ class StudentRecord (models.Model):
     enrollment_date = fields.Date(string='Enrollment Date')
     
     #Connection to the student.enrollment
-    enrollment_ids = fields.One2many('student.enrollment', 'student_id', string = 'Enrollments')
+    first_year_ids = fields.One2many('student.enrollment', 'student_id', domain = [('enrollment_yearlvl', '=', 'first_year')], string = 'First Year Enrollment')
+    
+    second_year_ids = fields.One2many('student.enrollment', 'student_id', domain = [('enrollment_yearlvl', '=', 'second_year')], string = 'Second Year Enrollment')
+    
+    third_year_ids = fields.One2many('student.enrollment', 'student_id', domain = [('enrollment_yearlvl', '=', 'third_year')], string = 'Third Year Enrollment')
+    
+    fourth_year_ids = fields.One2many('student.enrollment', 'student_id', domain = [('enrollment_yearlvl', '=', 'fourth_yearr')], string = 'Fourth Year Enrollment')
     
     #Archive Status
     active = fields.Boolean(string='Active', default=True)
@@ -77,15 +84,18 @@ class StudentRecord (models.Model):
             record.status = 'enrolled'
     
     
-    @api.depends('enrollment_ids.grade', 'enrollment_ids.subject_id.units')
+    @api.depends('first_year_ids.grade', 'first_year_ids.subject_id.units', 'second_year_ids.grade', 'second_year_ids.subject_id.units', 'third_year_ids.grade', 'third_year_ids.subject_id.units', 'fourth_year_ids.grade', 'fourth_year_ids.subject_id.units')
     def _compute_gpa(self):
         for record in self:
-            enrollments = record.enrollment_ids
-            record.subject_count = len(enrollments)
-            record.total_units = sum(e.subject_id.units for e in enrollments)
-            record.units_passed = sum(e.subject_id.units for e in enrollments if e.grade in PASSING_GRADES)
+            first_year_enrollments = record.first_year_ids
+            second_year_enrollments = record.second_year_ids
+            third_year_enrollments = record.third_year_ids
+            fourth_year_enrollments = record.fourth_year_ids
+            record.subject_count = len(first_year_enrollments) + len(second_year_enrollments) + len(third_year_enrollments) + len(fourth_year_enrollments)   
+            record.total_units = sum(e.subject_id.units for e in first_year_enrollments) + sum(e.subject_id.units for e in second_year_enrollments) + sum(e.subject_id.units for e in third_year_enrollments) + sum(e.subject_id.units for e in fourth_year_enrollments)
+            record.units_passed = sum(e.subject_id.units for e in first_year_enrollments if e.grade in PASSING_GRADES) + sum(e.subject_id.units for e in second_year_enrollments if e.grade in PASSING_GRADES) + sum(e.subject_id.units for e in third_year_enrollments if e.grade in PASSING_GRADES) + sum(e.subject_id.units for e in fourth_year_enrollments if e.grade in PASSING_GRADES)
             if record.total_units > 0:
-                weighted_points = sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in enrollments)
+                weighted_points = sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in first_year_enrollments) + sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in second_year_enrollments) + sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in third_year_enrollments) + sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in fourth_year_enrollments)
                 record.gpa = weighted_points / record.total_units
             else:
                 record.gpa = 0.0

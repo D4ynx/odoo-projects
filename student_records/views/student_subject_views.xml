@@ -25,7 +25,6 @@
                         <field name="units"/>
                         <field name="course"/>
                         <field name="enrollee_count"/>
-                        
                     </group>
                 </sheet>
             </form>
