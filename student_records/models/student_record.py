@@ -16,6 +16,7 @@ PASSING_GRADES = ['A', 'A-', 'B', 'B-', 'C']
 class StudentRecord (models.Model):
     _name = 'student.record'
     _description = 'Student Record'
+    _rec_name = 'reference'
     
     reference = fields.Char(string='Student ID', copy=False, readonly=True, default ='New')
     name = fields.Char(string='Name', required=True)
@@ -38,7 +39,6 @@ class StudentRecord (models.Model):
     units_passed = fields.Integer(string='Units Passed', compute='_compute_gpa', store=True, readonly=True)
     subject_count = fields.Integer(string='Subject Count', compute='_compute_gpa', store=True)
     
-    
     status = fields.Selection([
         ('enrolled', 'Enrolled'),
         ('graduated', 'Graduated'),
@@ -49,6 +49,9 @@ class StudentRecord (models.Model):
     
     #Connection to the student.enrollment
     enrollment_ids = fields.One2many('student.enrollment', 'student_id', string = 'Enrollments')
+    
+    #Archive Status
+    active = fields.Boolean(string='Active', default=True)
             
     @api.constrains('enrollment_date')
     def _check_enrollment_date(self):
@@ -74,18 +77,25 @@ class StudentRecord (models.Model):
             record.status = 'enrolled'
     
     
-    @api.depends('enrollment_ids.grade', 'enrollment_ids.subject.id_units')
+    @api.depends('enrollment_ids.grade', 'enrollment_ids.subject_id.units')
     def _compute_gpa(self):
         for record in self:
             enrollments = record.enrollment_ids
             record.subject_count = len(enrollments)
-            record.total_units = sum(e.subject_ids.units for e in enrollments)
-            record.units_passed = sum(e.subject_ids.units for e in enrollments if e.grade in PASSING_GRADES)
+            record.total_units = sum(e.subject_id.units for e in enrollments)
+            record.units_passed = sum(e.subject_id.units for e in enrollments if e.grade in PASSING_GRADES)
             if record.total_units > 0:
                 weighted_points = sum(GRADE_POINTS.get(e.grade, 0.0) * e.subject_id.units for e in enrollments)
                 record.gpa = weighted_points / record.total_units
             else:
                 record.gpa = 0.0
-        
+    
+    def action_archive(self):
+        for record in self:
+            record.active = False
+            
+    def action_unarchive(self):
+        for record in self:
+            record.active = True
     
      

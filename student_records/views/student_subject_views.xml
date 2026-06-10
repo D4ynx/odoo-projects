@@ -7,7 +7,7 @@
         <field name="model">student.subject</field>
         <field name="arch" type="xml">
             <tree string="Subjects">
-                <field name="subject_name"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -20,10 +20,12 @@
             <form string="Subject">
                 <sheet>
                     <group>
-                        <field name="subject_name"/>
-                        <field name="grade"/>
+                        <field name="name"/>
+                        <field name="course_code"/>
                         <field name="units"/>
-                        <field name="student_id"/>
+                        <field name="course"/>
+                        <field name="enrollee_count"/>
+                        
                     </group>
                 </sheet>
             </form>
@@ -42,6 +44,6 @@
         name = "Subjects"
         parent= "student_record_menu"
         action="student_subject_action"
-        sequence="2"/>
+        sequence="3"/>
 
 </odoo>

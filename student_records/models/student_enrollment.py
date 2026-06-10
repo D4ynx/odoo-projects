@@ -20,8 +20,24 @@ class StudentEnrollment (models.Model):
     #Connection to the student.record
     student_id = fields.Many2one('student.record', string='Student', ondelete='cascade')
     
+    #Relational Field for subject_id
+    student_course = fields.Selection(related='student_id.course', string='Course')
+    
     #Connection to the student.subject
-    subject_id = fields.Many2one('student.subject', string='Subject', ondelete='cascade')
+    subject_id = fields.Many2one('student.subject', string='Subject', ondelete='cascade', domain="[('course', '=', student_course)]")
+    
+    academic_year = fields.Char(string='Academic Year')
+    semester = fields.Selection([
+        ('first', 'First Semester'),
+        ('second', 'Second Semester'),
+        ('summer', 'Intersession'),
+    ], string = 'Semester')
+    
+    status = fields.Selection([
+        ('ongoing','Ongoing'),
+        ('passed', 'Passed'),
+        ('failed', 'Failed'),
+    ], readonly = True, compute="_compute_status", default = 'ongoing')
     
     grade = fields.Selection([
         ('A', 'A'),
@@ -31,11 +47,22 @@ class StudentEnrollment (models.Model):
         ('C', 'C'),
         ('D', 'D'),
         ('F', 'F'),
-    ], string='Grade', required=True)
-    
-    is_passed = fields.Boolean(string='Passed', compute='_compute_is_passed')
-    
+    ], string='Grade')
+
     @api.depends('grade')
-    def _compute_is_passed(self):
+    def _compute_status(self):
         for record in self:
-            record.is_passed = record.grade in PASSING_GRADES
+            if not record.grade:
+                record.status = 'ongoing'
+            elif record.grade in PASSING_GRADES:
+                record.status = 'passed'
+            else:
+                record.status = 'failed'
+                
+    @api.constrains('student_id', 'subject_id')
+    def _check_course_subject(self):
+        for record in self:
+            if record.subject_id.course != record.student_id.course:
+                raise ValidationError(
+                    f'Subject {record.subject_id.course} does not belong to {record.student_id.course}!'
+                )

@@ -30,7 +30,7 @@
                     <button
                         name="action_dropped"
                         string="Mark as Dropped"
-                        type="object"
+                            type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('status', '=', 'dropped')]}"/>
                     <button
@@ -39,6 +39,20 @@
                         type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('status', '=', 'enrolled')]}"/>
+                    <button
+                        name="action_archive"
+                        string="Archive"
+                        type="object"
+                        class="btn-secondary"
+                        confirm="This student will be hidden from the student list. Are you sure you want to archive this record?"
+                        attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button
+                        name="action_unarchive"
+                        string="Unarchive"
+                        type="object"
+                        class="btn-secondary"
+                        confirm="This student will be shown on the student list. Are you sure you want to unarchive this record?"
+                        attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="status"
                         widget="statusbar"
                         statusbar_visible="enrolled,graduated,dropped"/>
@@ -52,14 +66,15 @@
                         <field name = "email"/>
                         <field name = "gpa"/>
                         <field name = "enrollment_date"/>
+                        <field name="active" invisible="1"/>
                     </group>
-                    <notebook>
-                        <page string="Subjects">
-                            <field name="subject_ids">
+                    <notebook> 
+                        <page string="Grades">
+                            <field name="enrollment_ids">
                                 <tree>
-                                    <field name="subject_name"/>
+                                    <field name="subject_id"/>
                                     <field name="grade"/>
-                                    <field name="units"/>
+                                    <field name="status"/>
                                 </tree>
                             </field>
                         </page>
@@ -95,9 +110,11 @@
             <search string="Search Student">
                 <field name="name"/>
                 <field name="course"/>
+                <field name="yearlvl"/>
                 <filter string="Enrolled" name="enrolled" domain="[('status', '=', 'enrolled')]"/>
                 <filter string="Graduated" name="graduated" domain="[('status', '=', 'graduated')]"/>
                 <filter string="Dropped" name="dropped" domain="[('status', '=', 'dropped')]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Course" name="group_by_course" context="{'group_by':'course'}"/>
                     <filter string="Year Level" name="group_by_yearlvl" context="{'group_by':'yearlvl'}"/>
