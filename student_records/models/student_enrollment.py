@@ -26,20 +26,10 @@ class StudentEnrollment (models.Model):
     #Connection to the student.subject
     subject_id = fields.Many2one('student.subject', string='Subject', ondelete='cascade', domain="[('course', '=', student_course)]")
 
-    enrollment_yearlvl = fields.Selection([
-        ('first_year', 'First Year'),
-        ('second_year', 'Second Year'),
-        ('third_year', 'Third Year'),
-        ('fourth_year', 'Fourth Year'),
-    ], string="Year Level")
-    
+    #Connection to student.semester
+    enrollment_semester_records = fields.Many2one('student.semester', string='Semester')
+        
     academic_year = fields.Char(string='Academic Year')
-    
-    semester = fields.Selection([
-        ('first', 'First Semester'),
-        ('second', 'Second Semester'),
-        ('summer', 'Intersession'),
-    ], string = 'Semester')
     
     status = fields.Selection([
         ('ongoing','Ongoing'),
