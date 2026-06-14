@@ -12,6 +12,8 @@
         'views/student_subject_views.xml',
         'views/student_enrollment_views.xml',
         'views/student_semester_views.xml',
+        'report/student_report.xml',
+        'report/student_report_template.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -22,6 +22,12 @@
             <form string="Student Record">
                 <header>
                     <button
+                        name="action_print_report"
+                        string="Print Report"
+                        type="object"
+                        class="btn-primary"
+                        confirm="This academic record will be printed. Are you sure you want to print this record?"/>
+                    <button
                         name="action_graduated"
                         string="Mark as Graduated"
                         type="object"
@@ -91,8 +97,6 @@
         <field name="res_model">student.record</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-
 
     <!-- Menu -->
     <menuitem id="student_record_menu"

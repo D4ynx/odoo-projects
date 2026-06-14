@@ -66,12 +66,17 @@ class StudentEnrollment (models.Model):
     @api.constrains('student_id', 'subject_id')
     def _check_course_subject(self):
         for record in self:
-            if record.subject_id.course != record.student_id.course:
-                raise ValidationError(
-                    f'Subject {record.subject_id.course} does not belong to {record.student_id.course}!'
-                )
+            if record.subject_id and record.student_id:
+                if record.subject_id.course != record.student_id.course:
+                    raise ValidationError(
+                        f'Subject {record.subject_id.course} does not belong to {record.student_id.course}!'
+                    )
                 
     @api.model
     def create(self, vals):
-        raise UserError(f"vals received: {vals}")
+        if not vals.get('student_id') and vals.get('enrollment_semester_records'):
+            semester = self.env['student.semester'].browse(vals['enrollment_semester_records'])
+            if semester.semester_student_id:
+                vals['student_id'] = semester.semester_student_id.id
+        return super().create(vals)
                 

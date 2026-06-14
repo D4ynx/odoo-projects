@@ -35,7 +35,7 @@ class StudentRecord (models.Model):
     ], string = 'Year Level')
     
     #gpa calculation
-    gpa = fields.Float(string='GPA', compute="_compute_gpa", store=True, readonly=True)
+    gpa = fields.Float(string='Cumulative GPA', compute="_compute_gpa", store=True, readonly=True)
     total_units = fields.Integer(string='Total Units', compute='_compute_gpa', store=True, readonly=True)
     units_passed = fields.Integer(string='Units Passed', compute='_compute_gpa', store=True, readonly=True)
     subject_count = fields.Integer(string='Subject Count', compute='_compute_gpa', store=True)
@@ -101,5 +101,8 @@ class StudentRecord (models.Model):
     def action_unarchive(self):
         for record in self:
             record.active = True
+            
+    def action_print_report(self):
+        return self.env.ref('student_records.action_report_student').report_action(self)
     
      
