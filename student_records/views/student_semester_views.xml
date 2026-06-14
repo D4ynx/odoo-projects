@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View-->
+    <record id="student_semester_view_form" model="ir.ui.view">
+        <field name="name">student.semester.form</field>
+        <field name="model">student.semester</field>
+        <field name="arch" type="xml">
+            <form string = "Semester Information">
+                <sheet>
+                    <group>
+                        <field name="semester_enrollment_yearlvl"/>
+                        <field name="semester"/>
+                        <field name="semestral_gpa"/>
+                        <field name="semester_student_id" invisible="True"/>
+                        <field name="semester_student_course" invisible="True"/>
+                    </group>
+                    <group>
+                        <field name="semester_enrollment_ids" context="{'default_student_id' : semester_student_id, 'default_student_course' : semester_student_course}">
+                            <tree>
+                                <field name="subject_id"/>  
+                                <field name="grade"/>
+                                <field name="status"/>
+                            </tree>
+                            <form string = "Enrollment Information">
+                                <group>
+                                    <field name="subject_id"/>
+                                    <field name="grade"/>
+                                    <field name="status"/>
+                                    <field name="student_course"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

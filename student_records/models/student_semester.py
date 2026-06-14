@@ -15,9 +15,12 @@ GRADE_POINTS = {
 class StudentSemester (models.Model):
     _name = 'student.semester'
     _description = 'Student Enrollment per Semester'
-    
+    _order = 'semester_enrollment_yearlvl, semester'
     #Connection to student.record
-    semester_student_id = fields.Many2one('student.record', string='Student', ondelete='cascade')
+    semester_student_id = fields.Many2one('student.record', string='Student', ondelete='cascade', default=lambda self: self.env.context.get('default_semester_student_id'))
+    
+    #Relation connection to student.record course
+    semester_student_course = fields.Selection(related='semester_student_id.course', string="Course")
     
     #Connection to student.enrollment
     semester_enrollment_ids = fields.One2many('student.enrollment', 'enrollment_semester_records', string='Enrollments')
@@ -34,6 +37,8 @@ class StudentSemester (models.Model):
         ('second', 'Second Semester'),
         ('summer', 'Intersession'),
     ], string = 'Semester')
+    
+
     
     #gpa calculation
     semestral_gpa = fields.Float(compute='_compute_semestral_gpa', string='Semestral GPA', readonly = True, store = True)
@@ -55,7 +60,18 @@ class StudentSemester (models.Model):
             else:
                 record.semestral_gpa = 0.0
                 
-                
-            
+    @api.onchange('semester_student_id')
+    def _onchange_set_yearlvl(self):
+        for record in self:
+            if record.semester_student_id:
+                record.semester_enrollment_yearlvl = record.semester_student_id.student_yearlvl                
+    
+    @api.model
+    def create(self, vals):
+        if not vals.get('semester_student_id') and self.env.context.get('default_semester_student_id'):
+            vals['semester_student_id'] = self.env.context.get('default_semester_student_id')
+        return super().create(vals)
+    
+    
     
     

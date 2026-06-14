@@ -69,34 +69,12 @@
                         <field name="active" invisible="1"/>
                     </group>
                     <notebook> 
-                        <page string="First Year">
-                            <field name="semester_ids" context="{'default_smester_enrollment_yearlvl' :  'first_year'}">
-                                <tree>
+                        <page string="Academic Record">
+                            <field name="semester_ids" context="{'default_semester_student_id' : id}" 
+                                options="{'form_view_ref' : 'student_records.student_semester_view_form'}">
+                                <tree default_group_by = "semester_enrollment_yearlvl">
                                     <field name="semester"/>
-                                    <field name="semestral_gpa"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Second Year" attrs = "{'invisible': [('student_yearlvl', 'not in', ['second_year', 'third_year','fourth_year'])]}">
-                            <field name="semester_ids" context="{'default_semester_enrollment_yearlvl' : 'second_year'}">
-                                <tree>
-                                    <field name="semester"/>
-                                    <field name="semestral_gpa"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Third Year" attrs = "{'invisible' : [('student_yearlvl', 'not in', ['third_year','fourth_year'])]}">
-                            <field name="semester_ids" context="{'default_semester_enrollment_yearlvl' : 'third_year'}">
-                                <tree>
-                                    <field name="semester"/>
-                                    <field name="semestral_gpa"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Fourth Year" attrs = "{'invisible' : [('student_yearlvl', 'not in', ['fourth_year'])]}">
-                            <field name="semester_ids" context="{'default_semester_enrollment_yearlvl' : 'fourth_year'}">
-                                <tree>
-                                    <field name="semester"/>
+                                    <field name="semester_enrollment_yearlvl"/>
                                     <field name="semestral_gpa"/>
                                 </tree>
                             </field>
@@ -113,6 +91,8 @@
         <field name="res_model">student.record</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+
 
     <!-- Menu -->
     <menuitem id="student_record_menu"

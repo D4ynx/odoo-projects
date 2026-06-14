@@ -39,8 +39,7 @@ class StudentRecord (models.Model):
     total_units = fields.Integer(string='Total Units', compute='_compute_gpa', store=True, readonly=True)
     units_passed = fields.Integer(string='Units Passed', compute='_compute_gpa', store=True, readonly=True)
     subject_count = fields.Integer(string='Subject Count', compute='_compute_gpa', store=True)
-    
-    
+
     status = fields.Selection([
         ('enrolled', 'Enrolled'),
         ('graduated', 'Graduated'),
@@ -51,6 +50,9 @@ class StudentRecord (models.Model):
     
     #Connection to student.semester
     semester_ids = fields.One2many('student.semester', 'semester_student_id', string='Semester')
+
+    #Connection to student.enrollment
+    enrollment_ids = fields.One2many('student.enrollment', 'student_id', string = 'Enrollments')
     
     #Archive Status
     active = fields.Boolean(string='Active', default=True)

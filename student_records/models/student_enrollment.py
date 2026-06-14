@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 PASSING_GRADES = ['A', 'A-', 'B', 'B-', 'C']
 
@@ -18,7 +18,7 @@ class StudentEnrollment (models.Model):
     _description = 'Student specific enrollment details'
     
     #Connection to the student.record
-    student_id = fields.Many2one('student.record', string='Student', ondelete='cascade')
+    student_id = fields.Many2one('student.record', string='Student', default=lambda self: self.env.context.get('default_student_id'))
     
     #Relational Field for subject_id
     student_course = fields.Selection(related='student_id.course', string='Course')
@@ -57,6 +57,12 @@ class StudentEnrollment (models.Model):
             else:
                 record.status = 'failed'
                 
+    @api.onchange('enrollment_semester_records')
+    def _onchange_semester_records(self):
+        for record in self:
+            if self.enrollment_semester_records:
+                    self.student_id = self.enrollment_semester_records.semester_student_id
+                    
     @api.constrains('student_id', 'subject_id')
     def _check_course_subject(self):
         for record in self:
@@ -64,3 +70,8 @@ class StudentEnrollment (models.Model):
                 raise ValidationError(
                     f'Subject {record.subject_id.course} does not belong to {record.student_id.course}!'
                 )
+                
+    @api.model
+    def create(self, vals):
+        raise UserError(f"vals received: {vals}")
+                
